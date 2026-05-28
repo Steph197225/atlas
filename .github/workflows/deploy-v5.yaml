@@ -1,4 +1,4 @@
-name: Deploy v5 Preview
+name: Build Quartz
 
 on:
   push:
@@ -6,20 +6,13 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  deployments: write
-
 jobs:
-  deploy-v5:
+  build:
     runs-on: ubuntu-latest
-    name: Deploy v5 to Cloudflare Pages
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -32,21 +25,14 @@ jobs:
       - name: Install Quartz plugins
         run: npx quartz plugin install
 
-      - name: Prepare Quartz
+      - name: Sync Quartz
         run: npx quartz sync
 
       - name: Build Quartz
         run: npx quartz build
 
-      - name: Deploy to Blacknight via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          protocol: ftps
-          security: loose
-          local-dir: ./public/
-          server-dir: /atlas/
-          log-level: verbose
+          name: quartz-site
+          path: public
