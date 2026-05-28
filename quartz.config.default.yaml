@@ -7,7 +7,7 @@ configuration:
   analytics:
     provider: plausible
   locale: en-US
-  baseUrl: https://atlas.counsellingandpsychotherapy.ie
+  baseUrl: atlas.counsellingandpsychotherapy.ie
   ignorePatterns:
     - private
     - templates
